@@ -170,6 +170,8 @@ export type ResolveArrayThunks<TDispatchProps extends ReadonlyArray<any>> =
     : never
     ;
 
+export type CheckIfEmpty<T, TFallback> = keyof T extends never ? TFallback : T;
+
 /**
  * Connects a React component to a Redux store.
  *
@@ -189,12 +191,12 @@ export type ResolveArrayThunks<TDispatchProps extends ReadonlyArray<any>> =
  * @param mergeProps
  * @param options
  */
-export interface Connect {
+export interface Connect<PredefinedState = {}> {
     // tslint:disable:no-unnecessary-generics
     (): InferableComponentEnhancer<DispatchProp>;
 
     <TStateProps = {}, no_dispatch = {}, TOwnProps = {}, State = DefaultRootState>(
-        mapStateToProps: MapStateToPropsParam<TStateProps, TOwnProps, State>
+        mapStateToProps: MapStateToPropsParam<TStateProps, TOwnProps, CheckIfEmpty<PredefinedState, State>>
     ): InferableComponentEnhancerWithProps<TStateProps & DispatchProp, TOwnProps>;
 
     <no_state = {}, TDispatchProps = {}, TOwnProps = {}>(
@@ -211,12 +213,12 @@ export interface Connect {
     >;
 
     <TStateProps = {}, TDispatchProps = {}, TOwnProps = {}, State = DefaultRootState>(
-        mapStateToProps: MapStateToPropsParam<TStateProps, TOwnProps, State>,
+        mapStateToProps: MapStateToPropsParam<TStateProps, TOwnProps, CheckIfEmpty<PredefinedState, State>>,
         mapDispatchToProps: MapDispatchToPropsNonObject<TDispatchProps, TOwnProps>
     ): InferableComponentEnhancerWithProps<TStateProps & TDispatchProps, TOwnProps>;
 
     <TStateProps = {}, TDispatchProps = {}, TOwnProps = {}, State = DefaultRootState>(
-        mapStateToProps: MapStateToPropsParam<TStateProps, TOwnProps, State>,
+        mapStateToProps: MapStateToPropsParam<TStateProps, TOwnProps, CheckIfEmpty<PredefinedState, State>>,
         mapDispatchToProps: MapDispatchToPropsParam<TDispatchProps, TOwnProps>,
     ): InferableComponentEnhancerWithProps<
         TStateProps & ResolveThunks<TDispatchProps>,
@@ -230,7 +232,7 @@ export interface Connect {
     ): InferableComponentEnhancerWithProps<TMergedProps, TOwnProps>;
 
     <TStateProps = {}, no_dispatch = {}, TOwnProps = {}, TMergedProps = {}, State = DefaultRootState>(
-        mapStateToProps: MapStateToPropsParam<TStateProps, TOwnProps, State>,
+        mapStateToProps: MapStateToPropsParam<TStateProps, TOwnProps, CheckIfEmpty<PredefinedState, State>>,
         mapDispatchToProps: null | undefined,
         mergeProps: MergeProps<TStateProps, undefined, TOwnProps, TMergedProps>,
     ): InferableComponentEnhancerWithProps<TMergedProps, TOwnProps>;
@@ -242,10 +244,10 @@ export interface Connect {
     ): InferableComponentEnhancerWithProps<TMergedProps, TOwnProps>;
 
     <TStateProps = {}, no_dispatch = {}, TOwnProps = {}, State = DefaultRootState>(
-        mapStateToProps: MapStateToPropsParam<TStateProps, TOwnProps, State>,
+        mapStateToProps: MapStateToPropsParam<TStateProps, TOwnProps, CheckIfEmpty<PredefinedState, State>>,
         mapDispatchToProps: null | undefined,
         mergeProps: null | undefined,
-        options: Options<State, TStateProps, TOwnProps>
+        options: Options<CheckIfEmpty<PredefinedState, State>, TStateProps, TOwnProps>
     ): InferableComponentEnhancerWithProps<DispatchProp & TStateProps, TOwnProps>;
 
     <TStateProps = {}, TDispatchProps = {}, TOwnProps = {}>(
@@ -266,27 +268,27 @@ export interface Connect {
     >;
 
     <TStateProps = {}, TDispatchProps = {}, TOwnProps = {}, State = DefaultRootState>(
-        mapStateToProps: MapStateToPropsParam<TStateProps, TOwnProps, State>,
+        mapStateToProps: MapStateToPropsParam<TStateProps, TOwnProps, CheckIfEmpty<PredefinedState, State>>,
         mapDispatchToProps: MapDispatchToPropsNonObject<TDispatchProps, TOwnProps>,
         mergeProps: null | undefined,
-        options: Options<State, TStateProps, TOwnProps>
+        options: Options<CheckIfEmpty<PredefinedState, State>, TStateProps, TOwnProps>
     ): InferableComponentEnhancerWithProps<TStateProps & TDispatchProps, TOwnProps>;
 
     <TStateProps = {}, TDispatchProps = {}, TOwnProps = {}, State = DefaultRootState>(
-        mapStateToProps: MapStateToPropsParam<TStateProps, TOwnProps, State>,
+        mapStateToProps: MapStateToPropsParam<TStateProps, TOwnProps, CheckIfEmpty<PredefinedState, State>>,
         mapDispatchToProps: MapDispatchToPropsParam<TDispatchProps, TOwnProps>,
         mergeProps: null | undefined,
-        options: Options<State, TStateProps, TOwnProps>
+        options: Options<CheckIfEmpty<PredefinedState, State>, TStateProps, TOwnProps>
     ): InferableComponentEnhancerWithProps<
         TStateProps & ResolveThunks<TDispatchProps>,
         TOwnProps
     >;
 
     <TStateProps = {}, TDispatchProps = {}, TOwnProps = {}, TMergedProps = {}, State = DefaultRootState>(
-        mapStateToProps: MapStateToPropsParam<TStateProps, TOwnProps, State>,
+        mapStateToProps: MapStateToPropsParam<TStateProps, TOwnProps, CheckIfEmpty<PredefinedState, State>>,
         mapDispatchToProps: MapDispatchToPropsParam<TDispatchProps, TOwnProps>,
         mergeProps: MergeProps<TStateProps, TDispatchProps, TOwnProps, TMergedProps>,
-        options?: Options<State, TStateProps, TOwnProps, TMergedProps>
+        options?: Options<CheckIfEmpty<PredefinedState, State>, TStateProps, TOwnProps, TMergedProps>
     ): InferableComponentEnhancerWithProps<TMergedProps, TOwnProps>;
     // tslint:enable:no-unnecessary-generics
 }
